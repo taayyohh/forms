@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ZodSchema } from 'zod'
-import FormStore from '../store/FormStore'
+import FormStore from '../../store/FormStore'
 
 interface UseFormStoreParams<T> {
   initialFields: T
