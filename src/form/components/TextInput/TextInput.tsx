@@ -1,12 +1,9 @@
 import React from 'react'
+import { FormStoreType } from '../../../store'
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string
-  formStore: {
-    fields: Record<string, any>
-    errors: Record<string, string | undefined>
-    setField: (field: string, value: any) => void
-  }
+  formStore: FormStoreType<any>
 }
 
 const TextInput: React.FC<TextInputProps> = ({ name, formStore, ...rest }) => {

@@ -9,6 +9,15 @@ type FormErrors<T extends FormFields> = {
   [P in keyof T | '_submit']?: string
 }
 
+export type FormStoreType<T extends FormFields> = {
+  fields: T
+  errors: FormErrors<T>
+  setField: <K extends keyof T>(field: K, value: T[K]) => void
+  validate: () => Promise<boolean>
+  submit: (submissionHandler: (fields: T) => Promise<any>) => Promise<void>
+  resetForm: () => void
+}
+
 class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   fields: T
   errors: FormErrors<T> = {}

@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import { FormStoreType } from '../../../store'
 
 interface SelectOption {
   label: string
@@ -9,11 +10,7 @@ interface SelectOption {
 interface SelectProps {
   name: string
   options: SelectOption[]
-  formStore: {
-    fields: Record<string, any>
-    errors: Record<string, string | undefined>
-    setField: (field: string, value: any) => void
-  }
+  formStore: FormStoreType<any>
 }
 
 const CustomSelect: React.FC<SelectProps> = ({ name, options, formStore }) => {

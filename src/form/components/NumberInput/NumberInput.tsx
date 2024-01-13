@@ -1,12 +1,9 @@
 import React from 'react'
+import { FormStoreType } from '../../../store'
 
 interface NumberInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string
-  formStore: {
-    fields: Record<string, any>
-    errors: Record<string, string | undefined>
-    setField: (field: string, value: any) => void
-  }
+  formStore: FormStoreType<any>
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({ name, formStore, ...rest }) => {

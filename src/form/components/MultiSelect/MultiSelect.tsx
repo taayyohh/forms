@@ -1,5 +1,6 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async'
+import { FormStoreType } from '../../../store'
 
 interface SelectOption {
   label: string
@@ -9,11 +10,7 @@ interface SelectOption {
 interface MultiSelectProps {
   name: string
   loadOptions: (inputValue: string) => Promise<SelectOption[]>
-  formStore: {
-    fields: Record<string, any>
-    errors: Record<string, string | undefined>
-    setField: (field: string, value: any) => void
-  }
+  formStore: FormStoreType<any>
 }
 
 const CustomMultiSelect: React.FC<MultiSelectProps> = ({

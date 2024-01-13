@@ -1,11 +1,8 @@
 import React from 'react'
+import { FormStoreType } from '../../../store'
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   name: string
-  formStore: {
-    fields: Record<string, any>
-    errors: Record<string, string | undefined>
-    setField: (field: string, value: any) => void
-  }
+  formStore: FormStoreType<any>
 }
 
 const Textarea: React.FC<TextareaProps> = ({ name, formStore, ...rest }) => {
