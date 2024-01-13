@@ -11,6 +11,10 @@
     "test": "vitest",
     "test:watch": "vitest watch"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taayyohh/forms"
+  },
   "keywords": [
     "mobx",
     "zod",
