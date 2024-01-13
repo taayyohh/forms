@@ -8,7 +8,7 @@ interface UseFormStoreParams<T> {
   onSubmit: (fields: T) => Promise<void>
 }
 
-function useFormStore<T extends object>({
+export default function useFormStore<T extends object>({
   initialFields,
   validationSchema,
   onSubmit,
@@ -43,5 +43,3 @@ function useFormStore<T extends object>({
 
   return { formStore, handleChange, handleSubmit }
 }
-
-export default useFormStore
