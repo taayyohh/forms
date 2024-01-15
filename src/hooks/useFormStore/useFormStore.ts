@@ -14,10 +14,13 @@ export default function useFormStore<T extends object>({
   onSubmit,
 }: UseFormStoreParams<T>) {
   const [formStore] = useState(() => new FormStore(initialFields, validationSchema))
+  const [validationErrors, setValidationErrors] = useState({})
 
   const handleChange = useCallback(
     (field: keyof T, value: any) => {
       formStore.setField(field, value)
+      // Optionally, you can clear the error for this field when it changes
+      setValidationErrors((prev) => ({ ...prev, [field]: '' }))
     },
     [formStore],
   )
@@ -30,16 +33,20 @@ export default function useFormStore<T extends object>({
         try {
           await onSubmit(formStore.fields)
           formStore.resetForm()
+          setValidationErrors({}) // Clear validation errors on successful submission
         } catch (error) {
           if (error instanceof Error) {
-            // Optional: Handle submission errors
             console.error('Form submission error:', error)
+            // Optionally, handle submission errors here
           }
         }
+      } else {
+        // Update state with validation errors from formStore
+        setValidationErrors(formStore.errors)
       }
     },
     [formStore, onSubmit],
   )
 
-  return { formStore, handleChange, handleSubmit }
+  return { formStore, handleChange, handleSubmit, validationErrors }
 }
