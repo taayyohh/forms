@@ -1,19 +1,22 @@
 import React from 'react'
 import Select from 'react-select'
-import { FormStoreType } from '../../../store'
+import { FormFields, FormStoreType } from '../../../store'
 
 interface SelectOption {
   label: string
   value: string
 }
 
-interface SelectProps {
+interface SelectProps<T extends FormFields> {
   name: string
   options: SelectOption[]
-  formStore: FormStoreType<any>
+  formStore: FormStoreType<T>
 }
-
-const CustomSelect: React.FC<SelectProps> = ({ name, options, formStore }) => {
+const CustomSelect = <T extends FormFields>({
+  name,
+  options,
+  formStore,
+}: SelectProps<T>) => {
   const handleChange = (selectedOption: any) => {
     formStore.setField(name, selectedOption ? selectedOption.value : '')
   }

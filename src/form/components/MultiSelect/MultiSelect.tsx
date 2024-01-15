@@ -1,28 +1,28 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async'
-import { FormStoreType } from '../../../store'
+import { FormStoreType, FormFields } from '../../../store'
 
 interface SelectOption {
   label: string
   value: string
 }
 
-interface MultiSelectProps {
-  name: string
+interface MultiSelectProps<T extends FormFields> {
+  name: keyof T
   loadOptions: (inputValue: string) => Promise<SelectOption[]>
-  formStore: FormStoreType<any>
+  formStore: FormStoreType<T>
 }
 
-const CustomMultiSelect: React.FC<MultiSelectProps> = ({
+const CustomMultiSelect = <T extends FormFields>({
   name,
   loadOptions,
   formStore,
-}) => {
+}: MultiSelectProps<T>) => {
   const handleChange = (selectedOptions: any) => {
     const values = selectedOptions
       ? selectedOptions.map((option: SelectOption) => option.value)
       : []
-    formStore.setField(name, values)
+    formStore.setField(name, values as unknown as T[keyof T])
   }
 
   return (
@@ -32,7 +32,10 @@ const CustomMultiSelect: React.FC<MultiSelectProps> = ({
         loadOptions={loadOptions}
         value={
           formStore.fields[name] &&
-          formStore.fields[name].map((value: string) => ({ label: value, value }))
+          (formStore.fields[name] as string[]).map((value: string) => ({
+            label: value,
+            value,
+          }))
         }
         onChange={handleChange}
       />

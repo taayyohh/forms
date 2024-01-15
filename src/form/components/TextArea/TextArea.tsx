@@ -1,17 +1,30 @@
 import React from 'react'
-import { FormStoreType } from '../../../store'
-interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+import { FormStoreType, FormFields } from '../../../store'
+
+// Make TextareaProps generic and extend T from FormFields
+interface TextareaProps<T extends FormFields>
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   name: string
-  formStore: FormStoreType<any>
+  formStore: FormStoreType<T>
 }
 
-const Textarea: React.FC<TextareaProps> = ({ name, formStore, ...rest }) => {
+// Make Textarea a generic component
+const Textarea = <T extends FormFields>({
+  name,
+  formStore,
+  ...rest
+}: TextareaProps<T>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // Cast the string value to the correct type
+    formStore.setField(name, e.target.value as unknown as T[keyof T])
+  }
+
   return (
     <div>
       <textarea
-        name={name}
-        value={formStore.fields[name] || ''}
-        onChange={(e) => formStore.setField(name, e.target.value)}
+        name={String(name)}
+        value={(formStore.fields[name] as unknown as string) || ''}
+        onChange={handleInputChange}
         {...rest}
       />
       {formStore.errors[name] && <span>{formStore.errors[name]}</span>}

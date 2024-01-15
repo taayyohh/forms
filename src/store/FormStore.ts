@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { ZodSchema, ZodError } from 'zod'
 
-interface FormFields {
+export interface FormFields {
   [key: string]: any
 }
 
