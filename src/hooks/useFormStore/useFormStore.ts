@@ -6,6 +6,7 @@ interface UseFormStoreParams<T> {
   initialFields: T
   validationSchema: ZodSchema<T>
   onSubmit: (fields: T) => Promise<void>
+  validationErrors: {}
 }
 
 export default function useFormStore<T extends object>({
@@ -28,6 +29,7 @@ export default function useFormStore<T extends object>({
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
+      console.log('fields', formStore.fields, isValid)
       const isValid = await formStore.validate()
       if (isValid) {
         try {
