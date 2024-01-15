@@ -29,8 +29,8 @@ export default function useFormStore<T extends object>({
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
-      console.log('fields', formStore.fields, isValid)
       const isValid = await formStore.validate()
+      console.log('fields', formStore.fields, isValid)
       if (isValid) {
         try {
           await onSubmit(formStore.fields)
