@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormFields, FormStoreType } from '../../../store'
+import { observer } from "mobx-react";
 
 interface NumberInputProps<T extends FormFields>
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -7,7 +8,7 @@ interface NumberInputProps<T extends FormFields>
   formStore: FormStoreType<T>
 }
 
-const NumberInput = <T extends FormFields>({
+const NumberInput = observer(<T extends FormFields>({
   name,
   formStore,
   ...rest
@@ -28,6 +29,6 @@ const NumberInput = <T extends FormFields>({
       {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
     </div>
   )
-}
+})
 
 export default NumberInput

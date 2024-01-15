@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormStoreType, FormFields } from '../../../store'
+import { observer } from "mobx-react";
 
 // Make TextareaProps generic and extend T from FormFields
 interface TextareaProps<T extends FormFields>
@@ -9,7 +10,7 @@ interface TextareaProps<T extends FormFields>
 }
 
 // Make Textarea a generic component
-const Textarea = <T extends FormFields>({
+const Textarea = observer(<T extends FormFields>({
   name,
   formStore,
   ...rest
@@ -30,6 +31,6 @@ const Textarea = <T extends FormFields>({
       {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
     </div>
   )
-}
+})
 
 export default Textarea

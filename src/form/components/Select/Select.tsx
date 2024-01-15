@@ -1,6 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import { FormFields, FormStoreType } from '../../../store'
+import { observer } from "mobx-react";
 
 interface SelectOption {
   label: string
@@ -12,7 +13,7 @@ interface SelectProps<T extends FormFields> {
   options: SelectOption[]
   formStore: FormStoreType<T>
 }
-const CustomSelect = <T extends FormFields>({
+const CustomSelect = observer(<T extends FormFields>({
   name,
   options,
   formStore,
@@ -31,6 +32,6 @@ const CustomSelect = <T extends FormFields>({
       {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
     </div>
   )
-}
+})
 
 export default CustomSelect

@@ -1,6 +1,7 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async'
 import { FormStoreType, FormFields } from '../../../store'
+import { observer } from "mobx-react";
 
 interface SelectOption {
   label: string
@@ -13,7 +14,7 @@ interface MultiSelectProps<T extends FormFields> {
   formStore: FormStoreType<T>
 }
 
-const CustomMultiSelect = <T extends FormFields>({
+const CustomMultiSelect = observer(<T extends FormFields>({
   name,
   loadOptions,
   formStore,
@@ -42,6 +43,6 @@ const CustomMultiSelect = <T extends FormFields>({
       {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
     </div>
   )
-}
+})
 
 export default CustomMultiSelect
