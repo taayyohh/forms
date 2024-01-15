@@ -16,12 +16,7 @@ const TextInput = observer(
 
     return (
       <div>
-        <input
-          name={String(name)}
-          value={(formStore.fields[name] as unknown as string) || ''}
-          onChange={handleInputChange}
-          {...rest}
-        />
+        <input name={String(name)} onChange={handleInputChange} {...rest} />
         {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
       </div>
     )
