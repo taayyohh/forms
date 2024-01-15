@@ -44,6 +44,7 @@ export default function useFormStore<T extends object>({
         }
       } else {
         // Update state with validation errors from formStore
+        console.log('formStore errors', formStore.errors)
         setValidationErrors(formStore.errors)
       }
     },

@@ -2,7 +2,6 @@ import React from 'react'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
 
-// Make TextareaProps generic and extend T from FormFields
 interface TextareaProps<T extends FormFields>
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   name: string

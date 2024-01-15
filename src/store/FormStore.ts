@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { action, makeAutoObservable } from 'mobx'
 import { ZodSchema, ZodError } from 'zod'
 
 export interface FormFields {
@@ -25,7 +25,12 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   initialFields: T
 
   constructor(initialFields: T, validationSchema: U) {
-    makeAutoObservable(this)
+    makeAutoObservable(this, {
+      setField: action,
+      validate: action,
+      submit: action,
+      resetForm: action,
+    })
     this.fields = initialFields
     this.initialFields = initialFields
     this.validationSchema = validationSchema
@@ -42,6 +47,7 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
       this.errors = {} // Reset all errors
       return true
     } catch (error) {
+      console.log('validate error', error)
       if (error instanceof ZodError) {
         error.errors.forEach((err) => {
           const path = err.path[0]
