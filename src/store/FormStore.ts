@@ -22,15 +22,17 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   fields: T
   errors: FormErrors<T> = {}
   validationSchema: U
+  initialFields: T
 
   constructor(initialFields: T, validationSchema: U) {
     makeAutoObservable(this)
     this.fields = initialFields
+    this.initialFields = initialFields
     this.validationSchema = validationSchema
   }
 
   setField<K extends keyof T>(field: K, value: T[K]): void {
-    this.fields[field] = value
+    this.fields = { ...this.fields, [field]: value }
     this.errors[field] = ''
   }
 
@@ -69,7 +71,7 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   }
 
   resetForm(): void {
-    this.fields = { ...this.fields }
+    this.fields = { ...this.initialFields }
     this.errors = {}
   }
 }

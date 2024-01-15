@@ -1,9 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
-import { z, ZodError } from 'zod'
+import { string, z, ZodError, ZodSchema } from 'zod'
 import FormStore from '../src/store/FormStore'
 
+interface testFieldsType {
+  name: string
+  bio: string
+}
 // Define a simple Zod schema for testing
-const testSchema = z.object({
+const testSchema: ZodSchema<testFieldsType> = z.object({
   name: z.string().min(1, 'Name is required'),
   bio: z.string().min(1, 'Bio is required'),
 })
@@ -44,13 +48,15 @@ describe('FormStore', () => {
     it('should handle form submission successfully', async () => {
       // Mock the submission logic for success scenario
       formStore.submit = vi.fn().mockResolvedValue('Submitted')
-      await expect(formStore.submit()).resolves.toBe('Submitted')
+      await expect(formStore.submit(async (fields) => {})).resolves.toBe('Submitted')
     })
 
     it('should handle submission errors', async () => {
       // Mock the submission logic for failure scenario
       formStore.submit = vi.fn().mockRejectedValue(new Error('Submission failed'))
-      await expect(formStore.submit()).rejects.toThrow('Submission failed')
+      await expect(formStore.submit(async (fields) => {})).rejects.toThrow(
+        'Submission failed',
+      )
     })
   })
 
