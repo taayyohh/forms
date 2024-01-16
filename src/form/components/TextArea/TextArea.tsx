@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
+import clsx from 'clsx'
 
 interface TextareaProps<T extends FormFields>
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -8,18 +9,28 @@ interface TextareaProps<T extends FormFields>
   formStore: FormStoreType<T>
 }
 
-// Make Textarea a generic component
 const Textarea = observer(
-  <T extends FormFields>({ name, formStore, ...rest }: TextareaProps<T>) => {
+  <T extends FormFields>({ name, formStore, className, ...rest }: TextareaProps<T>) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      // Cast the string value to the correct type
       formStore.setField(name, e.target.value as unknown as T[keyof T])
     }
 
+    const textareaClassName = clsx(
+      'border p-2 rounded',
+      className,
+    )
+
     return (
       <div>
-        <textarea name={String(name)} onChange={handleInputChange} {...rest} />
-        {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
+        <textarea
+          name={String(name)}
+          className={textareaClassName}
+          onChange={handleInputChange}
+          {...rest}
+        />
+        {formStore.errors[name] && (
+          <span className="text-red-500">{formStore.errors[name]}</span>
+        )}
       </div>
     )
   },
