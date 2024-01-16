@@ -16,7 +16,7 @@ const Textarea = observer(
     }
 
     const textareaClassName = clsx(
-      'border p-2 rounded',
+      'border p-2 text-black',
       className,
     )
 

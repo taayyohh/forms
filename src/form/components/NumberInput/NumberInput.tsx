@@ -23,7 +23,7 @@ const NumberInput = observer(
 
     // Combine Tailwind classes with passed className
     const inputClassName = clsx(
-      'border p-2 rounded', // Tailwind classes
+      'border p-2 text-black', // Tailwind classes
       className, // User-provided classes
     )
 

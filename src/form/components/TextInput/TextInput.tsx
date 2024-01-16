@@ -20,7 +20,7 @@ const TextInput = observer(
       formStore.setField(name, e.target.value as unknown as T[keyof T])
     }
 
-    const inputClassName = clsx('w-full border p-2 rounded', className)
+    const inputClassName = clsx('w-full border p-2 text-black', className)
 
     return (
       <div>
