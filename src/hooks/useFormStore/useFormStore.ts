@@ -6,7 +6,6 @@ interface UseFormStoreParams<T> {
   initialFields: T
   validationSchema: ZodSchema<T>
   onSubmit: (fields: T) => Promise<void>
-  validationErrors: {}
 }
 
 export default function useFormStore<T extends object>({
@@ -34,7 +33,6 @@ export default function useFormStore<T extends object>({
       if (isValid) {
         try {
           await onSubmit(formStore.fields)
-          formStore.resetForm()
           setValidationErrors({}) // Clear validation errors on successful submission
         } catch (error) {
           if (error instanceof Error) {

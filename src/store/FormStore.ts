@@ -49,6 +49,7 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
     } catch (error) {
       console.log('validate error', error)
       console.log('zoderror', error instanceof ZodError)
+      console.log('z', error?.toString().includes('ZodError'))
       if (error instanceof ZodError) {
         error.errors.forEach((err) => {
           const path = err.path[0]
