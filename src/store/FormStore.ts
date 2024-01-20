@@ -47,18 +47,17 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
       this.errors = {} // Reset all errors
       return true
     } catch (error) {
-      console.log('validate error', error)
-      console.log('ty', typeof error)
-      console.log('zoderror', error instanceof ZodError)
-      console.log('z', error?.toString().includes('ZodError'))
-      if (error instanceof ZodError) {
-        error.errors.forEach((err) => {
-          const path = err.path[0]
-          if (typeof path === 'string' || typeof path === 'number') {
-            this.errors[path as keyof T] = err.message
-          }
-        })
-      }
+      let zodError = error as ZodError
+
+      zodError.errors.forEach((err) => {
+        const path = err.path[0]
+        if (typeof path === 'string') {
+          this.errors[path as keyof T] = err.message
+        }
+      })
+
+      console.log('Z', zodError)
+
       return false
     }
   }
