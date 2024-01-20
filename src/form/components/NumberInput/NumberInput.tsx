@@ -38,7 +38,7 @@ const NumberInput = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-sm text-red-500">{formStore.errors[name]}</span>
+          <span className="py-1 text-xs text-rose-800 lowercase">{formStore.errors[name]}</span>
         )}
       </div>
     )

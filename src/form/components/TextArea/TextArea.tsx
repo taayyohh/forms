@@ -29,7 +29,7 @@ const Textarea = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-rose-800">{formStore.errors[name]}</span>
+          <span className="py-1 lowercase text-xs text-rose-800">{formStore.errors[name]}</span>
         )}
       </div>
     )

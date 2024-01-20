@@ -24,9 +24,19 @@ const CustomMultiSelect = observer(
     }
 
     return (
-      <div>
-        <AsyncSelect isMulti loadOptions={loadOptions} onChange={handleChange} />
-        {formStore.errors[name] && <span>{formStore.errors[name]}</span>}
+      <div className={'flex flex-col text-black'}>
+        <AsyncSelect
+          cacheOptions
+          defaultOptions
+          loadOptions={loadOptions}
+          onChange={handleChange}
+          isMulti
+        />
+        {formStore.errors[name] && (
+          <span className="py-1 text-xs text-rose-800 lowercase">
+            {formStore.errors[name]}
+          </span>
+        )}
       </div>
     )
   },

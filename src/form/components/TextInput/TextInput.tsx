@@ -31,7 +31,7 @@ const TextInput = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-xs lowercase text-red-500">{formStore.errors[name]}</span>
+          <span className="py-1 text-xs lowercase text-rose-800">{formStore.errors[name]}</span>
         )}
       </div>
     )

@@ -1,16 +1,18 @@
 import React from 'react'
-import Select, { StylesConfig } from 'react-select'
+import { StylesConfig } from 'react-select'
 import { FormFields, FormStoreType } from '../../../store'
 import { observer } from 'mobx-react'
+import AsyncSelect from 'react-select/async'
 
 interface SelectOption {
   label: string
   value: string
 }
 
-interface SelectProps<T extends FormFields> extends React.SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectProps<T extends FormFields>
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   name: string
-  options: SelectOption[]
+  options: (inputValue: string) => Promise<SelectOption[]>
   formStore: FormStoreType<T>
   className?: string
 }
@@ -28,16 +30,19 @@ const CustomSelect = observer(
         // Use className as needed
       }),
       // Add more customizations if needed
-    };
+    }
 
     return (
-      <div className={'flex flex-col'}>
-        <Select
-          options={options}
+      <div className={'flex flex-col text-black'}>
+        <AsyncSelect
+          cacheOptions
+          defaultOptions
+          loadOptions={options}
           onChange={handleChange}
-          styles={customStyles}
         />
-        {formStore.errors[name] && <span className="text-red-500">{formStore.errors[name]}</span>}
+        {formStore.errors[name] && (
+          <span className="py-1 text-xs text-rose-800 lowercase">{formStore.errors[name]}</span>
+        )}
       </div>
     )
   },
