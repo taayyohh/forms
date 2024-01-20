@@ -18,7 +18,8 @@ const NumberInput = observer(
     ...rest
   }: NumberInputProps<T>) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      formStore.setField(name, e.target.value as unknown as T[keyof T])
+      const numericValue = Number(e.target.value)
+      formStore.setField(name, numericValue as unknown as T[keyof T])
     }
 
     // Combine Tailwind classes with passed className
@@ -28,7 +29,7 @@ const NumberInput = observer(
     )
 
     return (
-      <div>
+      <div className={'flex flex-col'}>
         <input
           type="number"
           name={name}
@@ -37,7 +38,7 @@ const NumberInput = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-red-500">{formStore.errors[name]}</span>
+          <span className="text-sm text-red-500">{formStore.errors[name]}</span>
         )}
       </div>
     )
