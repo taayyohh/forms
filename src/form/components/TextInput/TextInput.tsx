@@ -23,7 +23,7 @@ const TextInput = observer(
     const inputClassName = clsx('w-full border p-2 text-black', className)
 
     return (
-      <div>
+      <div className={'flex flex-col'}>
         <input
           name={String(name)}
           className={inputClassName}
@@ -31,7 +31,7 @@ const TextInput = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-red-500">{formStore.errors[name]}</span>
+          <span className="text-xs lowercase text-red-500">{formStore.errors[name]}</span>
         )}
       </div>
     )

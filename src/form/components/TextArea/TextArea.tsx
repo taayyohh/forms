@@ -16,12 +16,12 @@ const Textarea = observer(
     }
 
     const textareaClassName = clsx(
-      'border p-2 text-black',
+      'w-full min-h-[200px] resize-none border p-2 text-black outline-none',
       className,
     )
 
     return (
-      <div>
+      <div className={'flex flex-col'}>
         <textarea
           name={String(name)}
           className={textareaClassName}
@@ -29,7 +29,7 @@ const Textarea = observer(
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="text-red-500">{formStore.errors[name]}</span>
+          <span className="text-rose-800">{formStore.errors[name]}</span>
         )}
       </div>
     )

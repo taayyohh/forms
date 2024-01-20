@@ -56,8 +56,6 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
         }
       })
 
-      console.log('Z', zodError)
-
       return false
     }
   }

@@ -31,7 +31,7 @@ const CustomSelect = observer(
     };
 
     return (
-      <div>
+      <div className={'flex flex-col'}>
         <Select
           options={options}
           onChange={handleChange}
