@@ -134,25 +134,21 @@ const ImageUpload = observer(
             Drag and drop files here or click to upload
           </div>
         </div>
-        <div className="flex-1">
-          <div ref={sliderRef} className="keen-slider zoom-out">
+        <div className="flex-1 h-72">
+          <div ref={sliderRef} className="keen-slider">
             {previews.map((url, idx) => (
-              <div key={idx} className="keen-slider__slide zoom-out__slide">
-                <div style={scaleStyle(idx)}>
-                  <img src={url} alt={`preview-${idx}`} />
+              <div key={idx} className="keen-slider__slide relative">
+                <div className="absolute inset-0" style={scaleStyle(idx)}>
+                  <img
+                    src={url}
+                    alt={`preview-${idx}`}
+                    className="w-full h-full object-cover absolute"
+                  />
                 </div>
               </div>
             ))}
           </div>
         </div>
-        {uploadArtworkError?.mime && (
-          <div className="p-4 text-sm">
-            <ul className="m-0">
-              <li>{uploadArtworkError.mime}</li>
-            </ul>
-          </div>
-        )}
-        {isUploading && <div>Uploading...</div>}
       </div>
     )
   },
