@@ -1,3 +1,4 @@
+export * from './ImageUpload'
 export * from './MultiItem'
 export * from './MultiSelect'
 export * from './NumberInput'

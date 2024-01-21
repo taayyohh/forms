@@ -9,14 +9,14 @@ interface ArrayObjectField {
   defaultValue?: any
 }
 
-interface ArrayObjectInputProps<T extends FormFields> {
+interface MultiItemProps<T extends FormFields> {
   name: keyof T
   formStore: FormStoreType<T>
   fields: ArrayObjectField[]
 }
 
-const ArrayObjectInput = observer(
-  <T extends FormFields>({ name, formStore, fields }: ArrayObjectInputProps<T>) => {
+const MultiItem = observer(
+  <T extends FormFields>({ name, formStore, fields }: MultiItemProps<T>) => {
     const [items, setItems] = useState<any[]>(formStore.fields[name] as any[])
 
     const handleAddItem = () => {
@@ -98,4 +98,4 @@ const ArrayObjectInput = observer(
   },
 )
 
-export default ArrayObjectInput
+export default MultiItem
