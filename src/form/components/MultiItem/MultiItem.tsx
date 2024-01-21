@@ -49,7 +49,7 @@ const MultiItem = observer(
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             {fields.map((field) => (
-              <div key={field.name}>
+              <div key={field.name} className={'text-black'}>
                 {field.type === 'select' ? (
                   <select
                     value={item[field.name]}

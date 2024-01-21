@@ -35,6 +35,10 @@ const ImageUpload = observer(
         setDetails(s.track.details)
       },
       initial: 2,
+      slides: {
+        perView: 1,
+        origin: 'center',
+      },
     })
 
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -67,7 +71,7 @@ const ImageUpload = observer(
       setUploadArtworkError(null)
 
       try {
-        let existingURIs = (formStore[name as keyof typeof formStore] as string[]) || []
+        let existingURIs = (formStore.fields[name] as string[]) || []
         let newImageURIs = [...existingURIs]
         for (const file of files) {
           const car = await packToBlob({
@@ -82,7 +86,7 @@ const ImageUpload = observer(
           newImageURIs.push(uri)
           setPreviews((prev) => [...prev, previewUrl])
         }
-        formStore.setField(name, newImageURIs as unknown as T[keyof T])
+        formStore.setField(name as keyof T, newImageURIs as T[keyof T])
 
         setIsUploading(false)
       } catch (err) {
