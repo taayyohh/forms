@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, DragEvent } from 'react'
+import React, { useState, ChangeEvent, DragEvent, useRef } from 'react'
 import { observer } from 'mobx-react'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
@@ -28,7 +28,7 @@ const ImageUpload = observer(
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
-    const [details, setDetails] = React.useState<TrackDetails | null>(null)
+    const [details, setDetails] = useState<TrackDetails | null>(null)
     const [sliderRef] = useKeenSlider({
       loop: true,
       detailsChanged(s) {
@@ -36,6 +36,12 @@ const ImageUpload = observer(
       },
       initial: 2,
     })
+
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const handleClickUploadArea = () => {
+      fileInputRef.current?.click()
+    }
 
     const handleFileUpload = async (
       event: ChangeEvent<HTMLInputElement> | DragEvent,
@@ -76,7 +82,7 @@ const ImageUpload = observer(
           newImageURIs.push(uri)
           setPreviews((prev) => [...prev, previewUrl])
         }
-        formStore.setField(name, newImageURIs as unknown as T[keyof T]) // Update the formStore with cumulative URIs
+        formStore.setField(name, newImageURIs as unknown as T[keyof T])
 
         setIsUploading(false)
       } catch (err) {
@@ -107,13 +113,14 @@ const ImageUpload = observer(
 
     return (
       <div className="flex flex-col md:flex-row gap-4 p-4">
-        <div className="flex-1">
+        <div className="flex-1" onClick={handleClickUploadArea}>
           <div
-            className="border-dashed border-2 border-gray-300 rounded-lg p-4 text-center"
+            className="border-dashed border-2 border-gray-300 rounded-lg p-4 text-center h-full"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
             <input
+              ref={fileInputRef}
               type="file"
               multiple
               onChange={handleFileUpload}
