@@ -6,6 +6,7 @@ import { FormStoreType, FormFields } from '../../../store'
 import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
 import { packToBlob } from 'ipfs-car/pack/blob'
 import { NFTStorage } from 'nft.storage'
+import { TrackDetails } from 'keen-slider'
 
 interface ImageUploadProps<T extends FormFields> {
   name: keyof T
@@ -26,13 +27,14 @@ const ImageUpload = observer(
     ]
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
-    const [imageURIs, setImageURIs] = useState<string[]>([]) // Store the URIs of uploaded images
     const [isUploading, setIsUploading] = useState<boolean>(false)
-
-    const [sliderRef] = useKeenSlider<HTMLDivElement>({
+    const [details, setDetails] = React.useState<TrackDetails | null>(null)
+    const [sliderRef] = useKeenSlider({
       loop: true,
-      mode: 'free-snap',
-      slides: 1,
+      detailsChanged(s) {
+        setDetails(s.track.details)
+      },
+      initial: 2,
     })
 
     const handleFileUpload = async (
@@ -59,7 +61,8 @@ const ImageUpload = observer(
       setUploadArtworkError(null)
 
       try {
-        const newImageURIs = []
+        let existingURIs = (formStore[name as keyof typeof formStore] as string[]) || []
+        let newImageURIs = [...existingURIs]
         for (const file of files) {
           const car = await packToBlob({
             input: [{ content: file, path: file.name }],
@@ -73,8 +76,7 @@ const ImageUpload = observer(
           newImageURIs.push(uri)
           setPreviews((prev) => [...prev, previewUrl])
         }
-        setImageURIs(newImageURIs)
-        formStore.setField(name, newImageURIs as unknown as T[keyof T])
+        formStore.setField(name, newImageURIs as unknown as T[keyof T]) // Update the formStore with cumulative URIs
 
         setIsUploading(false)
       } catch (err) {
@@ -83,13 +85,33 @@ const ImageUpload = observer(
       }
     }
 
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+    }
+
+    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      handleFileUpload(e)
+    }
+
+    function scaleStyle(idx: number) {
+      if (!details) return {}
+      const slide = details.slides[idx]
+      const scale_size = 0.7
+      const scale = 1 - (scale_size - scale_size * slide.portion)
+      return {
+        transform: `scale(${scale})`,
+        WebkitTransform: `scale(${scale})`,
+      }
+    }
+
     return (
       <div className="flex flex-col md:flex-row gap-4 p-4">
         <div className="flex-1">
           <div
             className="border-dashed border-2 border-gray-300 rounded-lg p-4 text-center"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleFileUpload}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
           >
             <input
               type="file"
@@ -102,10 +124,12 @@ const ImageUpload = observer(
           </div>
         </div>
         <div className="flex-1">
-          <div ref={sliderRef} className="keen-slider">
+          <div ref={sliderRef} className="keen-slider zoom-out">
             {previews.map((url, idx) => (
-              <div key={idx} className="keen-slider__slide">
-                <img src={url} alt={`preview-${idx}`} className="w-full h-auto" />
+              <div key={idx} className="keen-slider__slide zoom-out__slide">
+                <div style={scaleStyle(idx)}>
+                  <img src={url} alt={`preview-${idx}`} />
+                </div>
               </div>
             ))}
           </div>
