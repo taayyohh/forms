@@ -1,4 +1,4 @@
-# mobx-form-store
+# mobx-zod-form-store
 
 A MobX-based form store with Zod validation.
 
@@ -11,7 +11,7 @@ mobx-form-store is a utility package for React applications using MobX for state
 To install the package, use npm:
 
 ```bash
-npm install mobx-form-store
+npm i mobx-zod-form-store
 ```
 
 Here's a basic example of how to use mobx-form-store:
