@@ -28,15 +28,11 @@ const ImageUpload = observer(
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
-    const [details, setDetails] = useState<TrackDetails | null>(null)
     const [sliderRef] = useKeenSlider({
-      loop: true,
-      detailsChanged(s) {
-        setDetails(s.track.details)
-      },
-      initial: 2,
+      mode: "free-snap",
       slides: {
-        perView: 1,
+        perView: 2,
+        spacing: 15,
         origin: 'center',
       },
     })
@@ -104,17 +100,6 @@ const ImageUpload = observer(
       handleFileUpload(e)
     }
 
-    function scaleStyle(idx: number) {
-      if (!details) return {}
-      const slide = details.slides[idx]
-      const scale_size = 0.7
-      const scale = 1 - (scale_size - scale_size * slide.portion)
-      return {
-        transform: `scale(${scale})`,
-        WebkitTransform: `scale(${scale})`,
-      }
-    }
-
     return (
       <div className="flex flex-col md:flex-row gap-4 p-4">
         <div className="flex-1" onClick={handleClickUploadArea}>
@@ -137,14 +122,8 @@ const ImageUpload = observer(
         <div className="flex-1 h-72">
           <div ref={sliderRef} className="keen-slider">
             {previews.map((url, idx) => (
-              <div key={idx} className="keen-slider__slide relative">
-                <div className="absolute inset-0" style={scaleStyle(idx)}>
-                  <img
-                    src={url}
-                    alt={`preview-${idx}`}
-                    className="w-full h-full object-cover absolute"
-                  />
-                </div>
+              <div key={idx} className="keen-slider__slide">
+                <img src={url} alt={`preview-${idx + 1}`} className="w-full h-auto" />
               </div>
             ))}
           </div>
