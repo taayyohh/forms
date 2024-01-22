@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { observer } from 'mobx-react'
 import { FormStoreType, FormFields } from '../../../store'
 
-interface ArrayObjectField {
+export interface ArrayObjectField {
   name: string
   type: 'text' | 'number' | 'select'
   options?: string[] // For select type

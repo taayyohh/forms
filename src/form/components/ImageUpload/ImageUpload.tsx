@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, DragEvent, useRef } from 'react'
 import { observer } from 'mobx-react'
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
+import "./styles.css"
 import { FormStoreType, FormFields } from '../../../store'
 import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
 import { packToBlob } from 'ipfs-car/pack/blob'
@@ -28,15 +29,14 @@ const ImageUpload = observer(
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
-    const [sliderRef] = useKeenSlider({
-      mode: "free-snap",
-      slides: {
-        perView: 2,
-        spacing: 15,
-        origin: 'center',
+    const [details, setDetails] = React.useState<TrackDetails | null>(null)
+    const [sliderRef] = useKeenSlider<HTMLDivElement>({
+      loop: true,
+      detailsChanged(s) {
+        setDetails(s.track.details)
       },
+      initial: 2,
     })
-
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleClickUploadArea = () => {
@@ -100,6 +100,18 @@ const ImageUpload = observer(
       handleFileUpload(e)
     }
 
+    function scaleStyle(idx: number) {
+      if (!details) return {}
+      const slide = details.slides[idx]
+      const scale_size = 0.7
+      const scale = 1 - (scale_size - scale_size * slide.portion)
+      return {
+        transform: `scale(${scale})`,
+        WebkitTransform: `scale(${scale})`,
+      }
+    }
+
+
     return (
       <div className="flex flex-col md:flex-row gap-4 p-4">
         <div className="flex-1" onClick={handleClickUploadArea}>
@@ -121,9 +133,11 @@ const ImageUpload = observer(
         </div>
         <div className="flex-1 h-72">
           <div ref={sliderRef} className="keen-slider">
-            {previews.map((url, idx) => (
-              <div key={idx} className="keen-slider__slide">
-                <img src={url} alt={`preview-${idx + 1}`} className="w-full h-auto" />
+            {previews.map((src, idx) => (
+              <div key={idx} className="keen-slider__slide zoom-out__slide">
+                <div style={scaleStyle(idx)}>
+                  <img src={src} />
+                </div>
               </div>
             ))}
           </div>

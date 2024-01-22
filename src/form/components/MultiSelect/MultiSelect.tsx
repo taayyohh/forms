@@ -3,7 +3,7 @@ import AsyncSelect from 'react-select/async'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
 
-interface SelectOption {
+export interface SelectOption {
   label: string
   value: string
 }
