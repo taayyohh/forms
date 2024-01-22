@@ -1,13 +1,13 @@
-import React, { useState, ChangeEvent, DragEvent, useRef } from 'react'
+import React, { useState, ChangeEvent, DragEvent, useRef, useEffect } from 'react'
 import { observer } from 'mobx-react'
-import { useKeenSlider } from 'keen-slider/react'
+import { KeenSliderInstance, useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
-import "./styles.css"
+import './styles.css'
 import { FormStoreType, FormFields } from '../../../store'
 import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
 import { packToBlob } from 'ipfs-car/pack/blob'
 import { NFTStorage } from 'nft.storage'
-import { TrackDetails } from 'keen-slider'
+import { KeenSliderHooks, TrackDetails } from 'keen-slider'
 
 interface ImageUploadProps<T extends FormFields> {
   name: keyof T
@@ -30,12 +30,29 @@ const ImageUpload = observer(
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
     const [details, setDetails] = React.useState<TrackDetails | null>(null)
-    const [sliderRef] = useKeenSlider<HTMLDivElement>({
+    const [slider, setSlider] = useState<KeenSliderInstance<
+      {},
+      {},
+      KeenSliderHooks
+    > | null>(null)
+
+    // Reinitialize slider when new images are added
+    useEffect(() => {
+      if (slider && previews.length) {
+        slider.update()
+      }
+    }, [previews, slider])
+
+    const [sliderRef, sliderInstance] = useKeenSlider<HTMLDivElement>({
       loop: true,
-      detailsChanged(s) {
-        setDetails(s.track.details)
+      mode: 'free-snap',
+      slides: {
+        perView: 1,
+        spacing: 10,
       },
-      initial: 2,
+      created(s) {
+        setSlider(s)
+      },
     })
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -111,12 +128,14 @@ const ImageUpload = observer(
       }
     }
 
-
     return (
-      <div className="flex flex-col md:flex-row gap-4 p-4">
-        <div className="flex-1" onClick={handleClickUploadArea}>
+      <div className="flex flex-col md:flex-row gap-4 p-4 border">
+        <div
+          className="flex-1 border border-opacity-10 rounded-lg "
+          onClick={handleClickUploadArea}
+        >
           <div
-            className="border-dashed border-2 border-gray-300 rounded-lg p-4 text-center h-full"
+            className="p-4 text-center h-full"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
@@ -131,8 +150,8 @@ const ImageUpload = observer(
             Drag and drop files here or click to upload
           </div>
         </div>
-        <div className="flex-1 h-72">
-          <div ref={sliderRef} className="keen-slider">
+        <div className="flex-1 h-72 w-full">
+          <div ref={sliderRef} className="keen-slider h-full w-full">
             {previews.map((src, idx) => (
               <div key={idx} className="keen-slider__slide zoom-out__slide">
                 <div style={scaleStyle(idx)}>
