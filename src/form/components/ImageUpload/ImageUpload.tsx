@@ -44,16 +44,20 @@ const ImageUpload = observer(
     }, [previews, slider])
 
     const [sliderRef, sliderInstance] = useKeenSlider<HTMLDivElement>({
-      loop: true,
+      loop: false,
       mode: 'free-snap',
       slides: {
         perView: 1,
         spacing: 10,
       },
+      detailsChanged(s) {
+        setDetails(s.track.details)
+      },
       created(s) {
         setSlider(s)
       },
     })
+
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleClickUploadArea = () => {
@@ -129,9 +133,9 @@ const ImageUpload = observer(
     }
 
     return (
-      <div className="flex flex-col md:flex-row gap-4 p-4 border">
+      <div className="flex flex-col md:flex-row gap-4 p-4 border overflow-hidden">
         <div
-          className="flex-1 border border-opacity-10 rounded-lg "
+          className="flex-1 border border-opacity-10 rounded-lg min-w-[250px]"
           onClick={handleClickUploadArea}
         >
           <div

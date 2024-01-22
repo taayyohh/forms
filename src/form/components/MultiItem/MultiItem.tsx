@@ -45,7 +45,7 @@ const MultiItem = observer(
     }
 
     return (
-      <div>
+      <div className={'border p-2 rounded'}>
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             {fields.map((field) => (
