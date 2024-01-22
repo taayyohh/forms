@@ -12,7 +12,7 @@ import { ArrayObjectField } from '../MultiItem/MultiItem'
 import clsx from 'clsx'
 import { useFormStore } from '../../../hooks'
 
-enum FieldType {
+export enum FieldType {
   Text = 'text',
   Number = 'number',
   TextArea = 'textarea',
@@ -21,7 +21,7 @@ enum FieldType {
   ImageUpload = 'imageupload',
 }
 
-interface FieldConfig {
+export interface FieldConfig {
   name: string
   type: FieldType
   placeholder?: string
