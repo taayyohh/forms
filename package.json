@@ -1,11 +1,11 @@
 {
   "name": "mobx-zod-form-store",
-  "version": "0.2.15",
+  "version": "0.3.0",
   "description": "A MobX-based form store with Zod validation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "postcss src/tailwind.css -o dist/tailwind.css && tsc -p ./tsconfig.json",
+    "build": "postcss src/tailwind.css -o dist/tailwind.css && tsc -p ./tsconfig.json && copyfiles -u 1 src/**/*.css dist",
     "format": "prettier --write \"src/**/*.ts\"",
     "check-format": "prettier --check \"src/**/*.ts\"",
     "test": "vitest",
@@ -21,7 +21,8 @@
     "form",
     "react",
     "state management",
-    "validation"
+    "validation",
+    "tailwind"
   ],
   "author": "taayyohh",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "autoprefixer": "^10.4.17",
+    "copyfiles": "^2.4.1",
     "postcss": "^8.4.33",
     "postcss-cli": "^11.0.0",
     "prettier": "^3.2.4",

@@ -114,9 +114,9 @@ import { z } from 'zod';
 
 // Form fields configuration
 const fieldsConfig = [
-  { name: 'name', type: FieldType.Text, placeholder: 'Name' },
-  { name: 'age', type: FieldType.Number, placeholder: 'Age' },
-  // More fields...
+  { name: 'name', type: FieldType.Text, placeholder: 'Name', className: 'mb-4 p-2 border rounded' },
+  { name: 'age', type: FieldType.Number, placeholder: 'Age', className: 'mb-4 p-2 border rounded' },
+  // More fields with Tailwind classes...
 ];
 
 // Form validation schema
@@ -138,6 +138,7 @@ const MyDynamicForm = () => {
       initialFields={{ name: '', age: 0 }}
       validationSchema={formSchema}
       onSubmit={handleSubmit}
+      className={'border p-2'}
     />
   );
 };
@@ -146,6 +147,9 @@ export default MyDynamicForm;
 
 
 ```
+
+## Tailwind CSS Support
+This package is designed with Tailwind CSS in mind, offering seamless integration for projects using the Tailwind CSS framework. You can easily apply Tailwind utility classes to enhance the styling and responsiveness of your forms.
 
 ## Features
 - Easy integration with MobX
