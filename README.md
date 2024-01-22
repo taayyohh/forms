@@ -1,11 +1,10 @@
 # mobx-zod-form-store
 
-A MobX-based form store with Zod validation.
+A MobX-based form store with Zod validation, featuring a dynamic Form component for React applications.
 
 ## Description
 
-mobx-form-store is a utility package for React applications using MobX for state management. It simplifies the process of creating and managing form states, with integrated Zod validation to ensure data integrity.
-
+mobx-zod-form-store is a comprehensive utility package designed to streamline the process of creating, managing, and validating forms in React applications. It utilizes MobX for state management and Zod for robust schema validation. This package also includes a dynamic Form component, making form creation more declarative and less error-prone.
 ## Installation
 
 To install the package, use npm:
@@ -14,7 +13,9 @@ To install the package, use npm:
 npm i mobx-zod-form-store
 ```
 
-Here's a basic example of how to use mobx-form-store:
+## Usage
+### Basic FormStore Usage
+Here's a basic example of how to use the FormStore:
 
 ```
 import FormStore from 'mobx-form-store';
@@ -35,6 +36,8 @@ formStore.validate();
 
 ```
 
+### Using useFormStore Hook
+You can also use the useFormStore hook for managing form state in functional components:
 
 ```
 import React from 'react';
@@ -87,6 +90,59 @@ const MyForm = () => {
 };
 
 export default MyForm;
+```
+
+### Dynamic Form Component
+The Form component allows you to create forms dynamically based on a configuration array. This array defines the fields, their types, placeholders, and other properties.
+
+Form Field Types
+The package supports the following field types:
+
+- text: For text input.
+- number: For numeric input.
+- textarea: For multiline text input.
+- multiselect: For a multi-select input.
+- multiitem: For a group of related inputs.
+- imageupload: For uploading images.
+
+### Example of Using the Form Component
+
+```bash
+import React from 'react';
+import Form, { FieldType } from 'path-to-Form';
+import { z } from 'zod';
+
+// Form fields configuration
+const fieldsConfig = [
+  { name: 'name', type: FieldType.Text, placeholder: 'Name' },
+  { name: 'age', type: FieldType.Number, placeholder: 'Age' },
+  // More fields...
+];
+
+// Form validation schema
+const formSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  age: z.number().min(0, 'Age must be a positive number'),
+  // Validation for other fields...
+});
+
+const MyDynamicForm = () => {
+  const handleSubmit = async (fields) => {
+    // Handle form submission
+    console.log('Form Data:', fields);
+  };
+
+  return (
+    <Form
+      fieldsConfig={fieldsConfig}
+      initialFields={{ name: '', age: 0 }}
+      validationSchema={formSchema}
+      onSubmit={handleSubmit}
+    />
+  );
+};
+
+export default MyDynamicForm;
 
 
 ```
@@ -95,6 +151,7 @@ export default MyForm;
 - Easy integration with MobX
 - Built-in validation with Zod
 - Simplified form state management
+- Dynamic Form component for flexible form creation.
 
 ## Contributing
 Contributions, issues, and feature requests are welcome!
