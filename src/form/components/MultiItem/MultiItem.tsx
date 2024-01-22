@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { observer } from 'mobx-react'
 import { FormStoreType, FormFields } from '../../../store'
 
@@ -17,7 +17,13 @@ interface MultiItemProps<T extends FormFields> {
 
 const MultiItem = observer(
   <T extends FormFields>({ name, formStore, fields }: MultiItemProps<T>) => {
-    const [items, setItems] = useState<any[]>(formStore.fields[name] as any[])
+    // Initialize from formStore and keep updated
+    const [items, setItems] = useState<any[]>((formStore.fields[name] as any[]) || [])
+
+    useEffect(() => {
+      // Update local state when formStore changes
+      setItems((formStore.fields[name] as any[]) || [])
+    }, [formStore.fields, name])
 
     const handleAddItem = () => {
       const newItem = fields.reduce(
@@ -27,7 +33,9 @@ const MultiItem = observer(
         }),
         {},
       )
-      setItems([...items, newItem])
+      const updatedItems = [...items, newItem]
+      setItems(updatedItems)
+      formStore.setField(name, updatedItems as unknown as T[keyof T])
     }
 
     const handleItemChange = (index: number, fieldName: string, value: any) => {

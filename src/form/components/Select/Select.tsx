@@ -1,47 +1,51 @@
 import React from 'react'
-import { StylesConfig } from 'react-select'
-import { FormFields, FormStoreType } from '../../../store'
-import { observer } from 'mobx-react'
 import AsyncSelect from 'react-select/async'
+import { observer } from 'mobx-react'
+import { FormStoreType, FormFields } from '../../../store'
 
 interface SelectOption {
   label: string
   value: string
 }
 
-interface SelectProps<T extends FormFields>
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  name: string
-  options: (inputValue: string) => Promise<SelectOption[]>
+interface CustomSelectProps<T extends FormFields> {
+  name: keyof T
+  loadOptions: (inputValue: string) => Promise<SelectOption[]>
   formStore: FormStoreType<T>
   className?: string
 }
 
 const CustomSelect = observer(
-  <T extends FormFields>({ name, options, formStore, className }: SelectProps<T>) => {
-    const handleChange = (selectedOption: any) => {
-      formStore.setField(name, selectedOption ? selectedOption.value : '')
+  <T extends FormFields>({
+    name,
+    loadOptions,
+    formStore,
+    className,
+  }: CustomSelectProps<T>) => {
+    const handleChange = (selectedOption: SelectOption | null) => {
+      formStore.setField(
+        name as keyof T,
+        (selectedOption ? selectedOption.value : '') as T[keyof T],
+      )
     }
 
-    const customStyles: StylesConfig<SelectOption, false> = {
-      control: (provided) => ({
-        ...provided,
-        // Apply additional styles here
-        // Use className as needed
-      }),
-      // Add more customizations if needed
-    }
+    const selectedValue = formStore.fields[name] as string
+    const value = selectedValue ? { label: selectedValue, value: selectedValue } : null
 
     return (
       <div className={'flex flex-col text-black'}>
         <AsyncSelect
           cacheOptions
           defaultOptions
-          loadOptions={options}
+          loadOptions={loadOptions}
           onChange={handleChange}
+          value={value}
+          className={className}
         />
         {formStore.errors[name] && (
-          <span className="py-1 text-xs text-rose-800 lowercase">{formStore.errors[name]}</span>
+          <span className="py-1 text-xs text-rose-800 lowercase">
+            {formStore.errors[name]}
+          </span>
         )}
       </div>
     )

@@ -21,17 +21,21 @@ const TextInput = observer(
     }
 
     const inputClassName = clsx('w-full border p-2 text-black', className)
+    const fieldValue = formStore.fields[name] || '' // Fetching the current value from the form store
 
     return (
       <div className={'flex flex-col'}>
         <input
           name={String(name)}
+          value={fieldValue} // Using fieldValue as the input's value
           className={inputClassName}
           onChange={handleInputChange}
           {...rest}
         />
         {formStore.errors[name] && (
-          <span className="py-1 text-xs lowercase text-rose-800">{formStore.errors[name]}</span>
+          <span className="py-1 text-xs lowercase text-rose-800">
+            {formStore.errors[name]}
+          </span>
         )}
       </div>
     )

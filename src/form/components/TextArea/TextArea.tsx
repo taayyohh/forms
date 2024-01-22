@@ -12,7 +12,7 @@ interface TextareaProps<T extends FormFields>
 const Textarea = observer(
   <T extends FormFields>({ name, formStore, className, ...rest }: TextareaProps<T>) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      formStore.setField(name, e.target.value as unknown as T[keyof T])
+      formStore.setField(name as keyof T, e.target.value as unknown as T[keyof T])
     }
 
     const textareaClassName = clsx(
@@ -23,13 +23,16 @@ const Textarea = observer(
     return (
       <div className={'flex flex-col'}>
         <textarea
-          name={String(name)}
+          name={name}
           className={textareaClassName}
           onChange={handleInputChange}
+          value={formStore.fields[name as keyof T] as unknown as string}
           {...rest}
         />
-        {formStore.errors[name] && (
-          <span className="py-1 lowercase text-xs text-rose-800">{formStore.errors[name]}</span>
+        {formStore.errors[name as keyof T] && (
+          <span className="py-1 text-xs lowercase text-rose-800">
+            {formStore.errors[name as keyof T]}
+          </span>
         )}
       </div>
     )

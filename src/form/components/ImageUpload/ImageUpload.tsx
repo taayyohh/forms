@@ -1,13 +1,12 @@
 import React, { useState, ChangeEvent, DragEvent, useRef, useEffect } from 'react'
 import { observer } from 'mobx-react'
-import { KeenSliderInstance, useKeenSlider } from 'keen-slider/react'
+import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import './styles.css'
 import { FormStoreType, FormFields } from '../../../store'
 import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
 import { packToBlob } from 'ipfs-car/pack/blob'
 import { NFTStorage } from 'nft.storage'
-import { KeenSliderHooks, TrackDetails } from 'keen-slider'
 
 interface ImageUploadProps<T extends FormFields> {
   name: keyof T
@@ -29,19 +28,6 @@ const ImageUpload = observer(
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
-    const [details, setDetails] = React.useState<TrackDetails | null>(null)
-    const [slider, setSlider] = useState<KeenSliderInstance<
-      {},
-      {},
-      KeenSliderHooks
-    > | null>(null)
-
-    // Reinitialize slider when new images are added
-    useEffect(() => {
-      if (slider && previews.length) {
-        slider.update()
-      }
-    }, [previews, slider])
 
     const [sliderRef, sliderInstance] = useKeenSlider<HTMLDivElement>({
       loop: false,
@@ -50,13 +36,17 @@ const ImageUpload = observer(
         perView: 1,
         spacing: 10,
       },
-      detailsChanged(s) {
-        setDetails(s.track.details)
-      },
-      created(s) {
-        setSlider(s)
-      },
     })
+
+    useEffect(() => {
+      const initialImages = formStore.fields[name] as string[]
+      if (initialImages && initialImages.length) {
+        const previewUrls = initialImages.map(
+          (uri) => `https://ipfs.io/ipfs/${uri.split('ipfs://')[1]}`,
+        )
+        setPreviews(previewUrls)
+      }
+    }, [formStore.fields, name])
 
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -112,10 +102,7 @@ const ImageUpload = observer(
       }
     }
 
-    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-    }
-
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => e.preventDefault()
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault()
       handleFileUpload(e)
@@ -142,18 +129,25 @@ const ImageUpload = observer(
             />
             {isUploading
               ? 'Uploading...'
-              : ' Drag and drop files here or click to upload'}
+              : 'Drag and drop files here or click to upload'}
           </div>
         </div>
         <div className="flex-1 h-72 w-full">
           <div ref={sliderRef} className="keen-slider h-full w-full">
             {previews.map((src, idx) => (
-              <div key={idx} className="keen-slider__slide zoom-out__slide">
-                <img src={src} />
+              <div key={idx} className="keen-slider__slide">
+                <img src={src} alt={`Image ${idx}`} />
               </div>
             ))}
           </div>
         </div>
+        {uploadArtworkError?.mime && (
+          <div className="p-4 text-sm">
+            <ul className="m-0">
+              <li>{uploadArtworkError.mime}</li>
+            </ul>
+          </div>
+        )}
       </div>
     )
   },

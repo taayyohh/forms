@@ -26,6 +26,7 @@ export interface FieldConfig {
   type: FieldType
   placeholder?: string
   loadOptions?: (inputValue: string) => Promise<SelectOption[]>
+  transformOption?: (data: any) => SelectOption
   options?: string[]
   defaultValue?: any
   fields?: ArrayObjectField[] // For nested fields like in MultiItem
@@ -83,11 +84,12 @@ const Form = <T extends FormFields>({
           />
         )
       case FieldType.MultiSelect:
-        return !!fieldConfig.loadOptions ? (
+        return !!fieldConfig.loadOptions && fieldConfig.transformOption ? (
           <MultiSelect
             name={fieldConfig.name}
             formStore={formStore}
             loadOptions={fieldConfig.loadOptions}
+            transformOption={fieldConfig.transformOption}
           />
         ) : null
       case FieldType.MultiItem:
