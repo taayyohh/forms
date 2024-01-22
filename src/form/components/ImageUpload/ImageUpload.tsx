@@ -122,13 +122,13 @@ const ImageUpload = observer(
     }
 
     return (
-      <div className="flex flex-col md:flex-row gap-4 p-4 border overflow-hidden">
+      <div className="flex flex-col gap-4 p-4 border overflow-hidden">
         <div
-          className="flex-1 border border-opacity-10 rounded-lg min-w-[250px]"
+          className="flex-1 border border-opacity-10 rounded-lg"
           onClick={handleClickUploadArea}
         >
           <div
-            className="p-4 text-center h-full"
+            className="p-6 text-center h-full"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
@@ -140,7 +140,9 @@ const ImageUpload = observer(
               disabled={isUploading}
               className="hidden"
             />
-            Drag and drop files here or click to upload
+            {isUploading
+              ? 'Uploading...'
+              : ' Drag and drop files here or click to upload'}
           </div>
         </div>
         <div className="flex-1 h-72 w-full">

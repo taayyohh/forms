@@ -49,13 +49,14 @@ const MultiItem = observer(
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             {fields.map((field) => (
-              <div key={field.name} className={'text-black'}>
+              <div key={field.name} className={'text-black w-full'}>
                 {field.type === 'select' ? (
                   <select
                     value={item[field.name]}
                     onChange={(e) =>
                       handleItemChange(index, field.name, e.target.value)
                     }
+                    className="h-10 p-2"
                   >
                     {field.options?.map((option) => (
                       <option key={option} value={option}>
@@ -65,6 +66,7 @@ const MultiItem = observer(
                   </select>
                 ) : (
                   <input
+                    className="w-full p-2 h-10"
                     type={field.type}
                     value={item[field.name]}
                     onChange={(e) =>
@@ -85,7 +87,11 @@ const MultiItem = observer(
             </button>
           </div>
         ))}
-        <button type="button" onClick={handleAddItem}>
+        <button
+          type="button"
+          onClick={handleAddItem}
+          className={'py-2 px-4 border inline-flex self-start'}
+        >
           Add Item
         </button>
         {formStore.errors[name] && (
