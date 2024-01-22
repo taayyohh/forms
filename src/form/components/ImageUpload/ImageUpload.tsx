@@ -121,17 +121,6 @@ const ImageUpload = observer(
       handleFileUpload(e)
     }
 
-    function scaleStyle(idx: number) {
-      if (!details) return {}
-      const slide = details.slides[idx]
-      const scale_size = 0.7
-      const scale = 1 - (scale_size - scale_size * slide.portion)
-      return {
-        transform: `scale(${scale})`,
-        WebkitTransform: `scale(${scale})`,
-      }
-    }
-
     return (
       <div className="flex flex-col md:flex-row gap-4 p-4 border overflow-hidden">
         <div
@@ -158,9 +147,7 @@ const ImageUpload = observer(
           <div ref={sliderRef} className="keen-slider h-full w-full">
             {previews.map((src, idx) => (
               <div key={idx} className="keen-slider__slide zoom-out__slide">
-                <div style={scaleStyle(idx)}>
-                  <img src={src} />
-                </div>
+                <img src={src} />
               </div>
             ))}
           </div>
