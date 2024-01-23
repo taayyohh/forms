@@ -11,19 +11,11 @@ import { SelectOption } from '../MultiSelect/MultiSelect'
 import { ArrayObjectField } from '../MultiItem/MultiItem'
 import clsx from 'clsx'
 import { useFormStore } from '../../../hooks'
-
-export enum FieldType {
-  Text = 'text',
-  Number = 'number',
-  TextArea = 'textarea',
-  MultiSelect = 'multiselect',
-  MultiItem = 'multiitem',
-  ImageUpload = 'imageupload',
-}
+import { FormFieldType } from '../../types'
 
 export interface FieldConfig {
   name: string
-  type: FieldType
+  type: FormFieldType
   placeholder?: string
   loadOptions?: (inputValue: string) => Promise<SelectOption[]>
   options?: string[]
@@ -55,7 +47,7 @@ const Form = <T extends FormFields>({
 
   const renderField = (fieldConfig: FieldConfig) => {
     switch (fieldConfig.type) {
-      case FieldType.Text:
+      case FormFieldType.Text:
         return (
           <TextInput
             name={fieldConfig.name}
@@ -64,7 +56,7 @@ const Form = <T extends FormFields>({
             className={fieldConfig.className}
           />
         )
-      case FieldType.Number:
+      case FormFieldType.Number:
         return (
           <NumberInput
             name={fieldConfig.name}
@@ -73,7 +65,7 @@ const Form = <T extends FormFields>({
             className={fieldConfig.className}
           />
         )
-      case FieldType.TextArea:
+      case FormFieldType.TextArea:
         return (
           <TextArea
             name={fieldConfig.name}
@@ -82,7 +74,7 @@ const Form = <T extends FormFields>({
             className={fieldConfig.className}
           />
         )
-      case FieldType.MultiSelect:
+      case FormFieldType.MultiSelect:
         return !!fieldConfig.loadOptions ? (
           <MultiSelect
             name={fieldConfig.name}
@@ -90,7 +82,7 @@ const Form = <T extends FormFields>({
             loadOptions={fieldConfig.loadOptions}
           />
         ) : null
-      case FieldType.MultiItem:
+      case FormFieldType.MultiItem:
         return !!fieldConfig.fields ? (
           <MultiItem
             name={fieldConfig.name}
@@ -98,7 +90,7 @@ const Form = <T extends FormFields>({
             fields={fieldConfig.fields}
           />
         ) : null
-      case FieldType.ImageUpload:
+      case FormFieldType.ImageUpload:
         return <ImageUpload name={fieldConfig.name} formStore={formStore} />
       default:
         return null
