@@ -12,33 +12,31 @@ export interface SelectOption {
 interface MultiSelectProps<T extends FormFields> {
   name: keyof T
   loadOptions: (inputValue: string) => Promise<SelectOption[]>
-  transformOption: (data: any) => SelectOption // Function to transform data to {value, label}
   formStore: FormStoreType<T>
 }
 
 const CustomMultiSelect = observer(
-  <T extends FormFields>({
-    name,
-    loadOptions,
-    transformOption,
-    formStore,
-  }: MultiSelectProps<T>) => {
+  <T extends FormFields>({ name, loadOptions, formStore }: MultiSelectProps<T>) => {
     const [selectedOptions, setSelectedOptions] = useState<SelectOption[]>([])
 
     useEffect(() => {
       const loadInitialOptions = async () => {
-        const currentValues = (formStore.fields[name] as string[]) || []
-        const options = await loadOptions('')
-        const transformedOptions = options.map(transformOption)
-        const selected = transformedOptions.filter((option) =>
-          currentValues.includes(option.value),
-        )
-        setSelectedOptions(selected)
+        const currentValues = formStore.fields[name] as string[]
+        if (currentValues && currentValues.length > 0) {
+          const options = await loadOptions('')
+          const selected = options.filter((option) =>
+            currentValues.includes(option.value),
+          )
+          setSelectedOptions(selected)
+        }
       }
       loadInitialOptions()
-    }, [formStore.fields, name, loadOptions, transformOption])
+    }, [formStore.fields, name, loadOptions])
 
-    const handleChange = (newValue: MultiValue<SelectOption>) => {
+    const handleChange = (
+      newValue: MultiValue<SelectOption>,
+      actionMeta: ActionMeta<SelectOption>,
+    ) => {
       // Extract the values from the selected options
       const values = newValue ? newValue.map((option) => option.value) : []
       formStore.setField(name, values as unknown as T[keyof T])

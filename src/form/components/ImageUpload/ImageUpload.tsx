@@ -1,12 +1,13 @@
 import React, { useState, ChangeEvent, DragEvent, useRef, useEffect } from 'react'
 import { observer } from 'mobx-react'
-import { useKeenSlider } from 'keen-slider/react'
+import { KeenSliderInstance, useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 import './styles.css'
 import { FormStoreType, FormFields } from '../../../store'
 import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
 import { packToBlob } from 'ipfs-car/pack/blob'
 import { NFTStorage } from 'nft.storage'
+import { KeenSliderHooks, TrackDetails } from 'keen-slider'
 
 interface ImageUploadProps<T extends FormFields> {
   name: keyof T
@@ -28,6 +29,18 @@ const ImageUpload = observer(
     const [uploadArtworkError, setUploadArtworkError] = useState<any>()
     const [previews, setPreviews] = useState<string[]>([])
     const [isUploading, setIsUploading] = useState<boolean>(false)
+    const [slider, setSlider] = useState<KeenSliderInstance<
+      {},
+      {},
+      KeenSliderHooks
+    > | null>(null)
+
+    // Reinitialize slider when new images are added
+    useEffect(() => {
+      if (slider && previews.length) {
+        slider.update()
+      }
+    }, [previews, slider])
 
     const [sliderRef, sliderInstance] = useKeenSlider<HTMLDivElement>({
       loop: false,
@@ -35,6 +48,9 @@ const ImageUpload = observer(
       slides: {
         perView: 1,
         spacing: 10,
+      },
+      created(s) {
+        setSlider(s)
       },
     })
 
@@ -135,8 +151,8 @@ const ImageUpload = observer(
         <div className="flex-1 h-72 w-full">
           <div ref={sliderRef} className="keen-slider h-full w-full">
             {previews.map((src, idx) => (
-              <div key={idx} className="keen-slider__slide">
-                <img src={src} alt={`Image ${idx}`} />
+              <div key={idx} className="keen-slider__slide zoom-out__slide">
+                <img src={src} />
               </div>
             ))}
           </div>
