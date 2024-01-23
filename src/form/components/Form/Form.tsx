@@ -104,7 +104,7 @@ const Form = <T extends FormFields>({
       ))}
       <button
         type="submit"
-        className="inline-flex self-end rounded p-3 mt-8 border hover:bg-[#111] text-xs text-white uppercase font-bold focus:outline-none"
+        className="inline-flex self-start rounded p-3 py-6 mt-8 border hover:bg-[#111] text-xs text-white uppercase font-bold focus:outline-none"
       >
         Submit
       </button>

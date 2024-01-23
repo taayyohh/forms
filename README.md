@@ -157,6 +157,60 @@ This package is designed with Tailwind CSS in mind, offering seamless integratio
 - Simplified form state management
 - Dynamic Form component for flexible form creation.
 
+
+## ImageUpload Component
+The ImageUpload component in `mobx-zod-form-store` provides an easy way to upload images to IPFS via NFT.storage, a free service for storing off-chain data like images and metadata for NFTs.
+
+### Features
+- Uploads images to IPFS via NFT.storage.
+- Generates IPFS URIs for each uploaded image.
+- Supports multiple image uploads.
+- Provides a preview of uploaded images.
+- Integrates seamlessly with the form store.
+
+### Usage
+To use the ImageUpload component, you need to:
+
+- Set Up NFT.storage Account: First, sign up for an account at NFT.storage and get your API token.
+
+- Install Dependencies: Make sure` mobx-zod-form-store` and its dependencies are installed in your project.
+
+- Use the Component: Import and use the ImageUpload component in your forms.
+
+```bash
+
+import React from 'react';
+import { useFormStore, ImageUpload } from 'mobx-zod-form-store';
+import { z } from 'zod';
+
+const formSchema = z.object({
+  imageUri: z.array(z.string()),
+});
+
+const MyForm = () => {
+  const { formStore, handleSubmit } = useFormStore({
+    initialFields: { imageUri: [] },
+    validationSchema: formSchema,
+    onSubmit: (fields) => {
+      console.log('Form Data:', fields);
+    },
+  });
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <ImageUpload name="imageUri" formStore={formStore} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default MyForm;
+
+
+```
+
+Remember to provide the NFT.storage API token in your projects `.env` to ensure the upload functionality works as expected.
+
 ## Contributing
 Contributions, issues, and feature requests are welcome!
 

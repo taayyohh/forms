@@ -1,6 +1,6 @@
 {
   "name": "mobx-zod-form-store",
-  "version": "0.3.11",
+  "version": "0.4.0",
   "description": "A MobX-based form store with Zod validation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

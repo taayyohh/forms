@@ -53,7 +53,7 @@ const MultiItem = observer(
     }
 
     return (
-      <div className={'border p-2 rounded'}>
+      <div className={'border p-4 rounded flex flex-col gap-3'}>
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             {fields.map((field) => (
@@ -90,7 +90,11 @@ const MultiItem = observer(
                 )}
               </div>
             ))}
-            <button type="button" onClick={() => handleRemoveItem(index)}>
+            <button
+              type="button"
+              onClick={() => handleRemoveItem(index)}
+              className="border px-1 py-5 rounded text-xs"
+            >
               Remove
             </button>
           </div>
