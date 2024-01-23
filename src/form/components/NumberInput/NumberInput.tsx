@@ -1,15 +1,14 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
 import clsx from 'clsx'
 
 interface NumberInputProps<T extends FormFields>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  name: string // Updated to string
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
+  name: keyof T
   formStore: FormStoreType<T>
   className?: string
 }
-
 const NumberInput = observer(
   <T extends FormFields>({
     name,
@@ -17,27 +16,34 @@ const NumberInput = observer(
     className,
     ...rest
   }: NumberInputProps<T>) => {
+    const [inputValue, setInputValue] = useState(formStore.fields[name] || 0)
+
+    useEffect(() => {
+      setInputValue(formStore.fields[name] || 0)
+    }, [formStore.fields[name], name])
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const numericValue = Number(e.target.value)
-      formStore.setField(name as keyof T, numericValue as unknown as T[keyof T]) // Cast name to keyof T
+      const newValue = Number(e.target.value)
+      setInputValue(newValue)
+      formStore.setField(name, newValue as unknown as T[keyof T])
     }
 
-    const inputClassName = clsx('border p-2 text-black', className)
+    const inputClassName = clsx('w-full border p-2 text-black', className)
 
     return (
       <div className={'flex flex-col'}>
         <input
           type="number"
-          name={name}
-          value={(formStore.fields[name as keyof T] as unknown as number) || ''} // Cast name to keyof T
+          name={String(name)}
+          value={inputValue}
           className={inputClassName}
           onChange={handleInputChange}
           {...rest}
         />
-        {formStore.errors[name as keyof T] && ( // Cast name to keyof T
-          <span className="py-1 text-xs text-rose-800 lowercase">
-            {formStore.errors[name as keyof T]}
-          </span> // Cast name to keyof T
+        {formStore.errors[name] && (
+          <span className="py-1 text-xs lowercase text-rose-800">
+            {formStore.errors[name]}
+          </span>
         )}
       </div>
     )

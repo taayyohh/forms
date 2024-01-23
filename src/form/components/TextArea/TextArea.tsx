@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
 import clsx from 'clsx'
 
 interface TextareaProps<T extends FormFields>
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  name: string
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'name'> {
+  name: keyof T
   formStore: FormStoreType<T>
+  className?: string
 }
 
-const Textarea = observer(
+const TextArea = observer(
   <T extends FormFields>({ name, formStore, className, ...rest }: TextareaProps<T>) => {
+    const [inputValue, setInputValue] = useState(formStore.fields[name] || '')
+
+    useEffect(() => {
+      setInputValue(formStore.fields[name] || '')
+    }, [formStore.fields[name], name])
+
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      formStore.setField(name as keyof T, e.target.value as unknown as T[keyof T])
+      const newValue = e.target.value
+      setInputValue(newValue)
+      formStore.setField(name, newValue as unknown as T[keyof T])
     }
 
     const textareaClassName = clsx(
@@ -23,15 +32,15 @@ const Textarea = observer(
     return (
       <div className={'flex flex-col'}>
         <textarea
-          name={name}
+          name={String(name)}
+          value={inputValue}
           className={textareaClassName}
           onChange={handleInputChange}
-          value={formStore.fields[name as keyof T] as unknown as string}
           {...rest}
         />
-        {formStore.errors[name as keyof T] && (
-          <span className="py-1 text-xs lowercase text-rose-800">
-            {formStore.errors[name as keyof T]}
+        {formStore.errors[name] && (
+          <span className="py-1 lowercase text-xs text-rose-800">
+            {formStore.errors[name]}
           </span>
         )}
       </div>
@@ -39,4 +48,4 @@ const Textarea = observer(
   },
 )
 
-export default Textarea
+export default TextArea

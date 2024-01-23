@@ -1,36 +1,47 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AsyncSelect from 'react-select/async'
-import { observer } from 'mobx-react'
 import { FormStoreType, FormFields } from '../../../store'
+import { observer } from 'mobx-react'
+import { ActionMeta, SingleValue } from 'react-select'
 
-interface SelectOption {
+export interface SelectOption {
   label: string
   value: string
 }
 
-interface CustomSelectProps<T extends FormFields> {
+interface SingleSelectProps<T extends FormFields> {
   name: keyof T
   loadOptions: (inputValue: string) => Promise<SelectOption[]>
   formStore: FormStoreType<T>
-  className?: string
 }
 
 const CustomSelect = observer(
-  <T extends FormFields>({
-    name,
-    loadOptions,
-    formStore,
-    className,
-  }: CustomSelectProps<T>) => {
-    const handleChange = (selectedOption: SelectOption | null) => {
-      formStore.setField(
-        name as keyof T,
-        (selectedOption ? selectedOption.value : '') as T[keyof T],
-      )
-    }
+  <T extends FormFields>({ name, loadOptions, formStore }: SingleSelectProps<T>) => {
+    const [selectedOption, setSelectedOption] = useState<SelectOption | null>(null)
 
-    const selectedValue = formStore.fields[name] as string
-    const value = selectedValue ? { label: selectedValue, value: selectedValue } : null
+    useEffect(() => {
+      const loadInitialOption = async () => {
+        const currentValue = formStore.fields[name] as string
+        if (currentValue) {
+          const options = await loadOptions('')
+          const selected = options.find((option) => option.value === currentValue)
+          setSelectedOption(selected || null)
+        }
+      }
+      loadInitialOption()
+    }, [formStore.fields, name, loadOptions])
+
+    const handleChange = (
+      newValue: SingleValue<SelectOption>,
+      actionMeta: ActionMeta<SelectOption>,
+    ) => {
+      setSelectedOption(newValue)
+      if (newValue) {
+        formStore.setField(name, newValue.value as unknown as T[keyof T])
+      } else {
+        formStore.setField(name, '' as unknown as T[keyof T])
+      }
+    }
 
     return (
       <div className={'flex flex-col text-black'}>
@@ -39,8 +50,7 @@ const CustomSelect = observer(
           defaultOptions
           loadOptions={loadOptions}
           onChange={handleChange}
-          value={value}
-          className={className}
+          value={selectedOption}
         />
         {formStore.errors[name] && (
           <span className="py-1 text-xs text-rose-800 lowercase">

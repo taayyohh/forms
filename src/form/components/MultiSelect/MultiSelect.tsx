@@ -37,8 +37,10 @@ const CustomMultiSelect = observer(
       newValue: MultiValue<SelectOption>,
       actionMeta: ActionMeta<SelectOption>,
     ) => {
-      // Extract the values from the selected options
-      const values = newValue ? newValue.map((option) => option.value) : []
+      const updatedOptions = newValue ? [...newValue] : []
+      const values = updatedOptions.map((option) => option.value)
+
+      setSelectedOptions(updatedOptions)
       formStore.setField(name, values as unknown as T[keyof T])
     }
 

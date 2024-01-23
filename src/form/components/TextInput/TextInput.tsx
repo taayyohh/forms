@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormStoreType, FormFields } from '../../../store'
 import { observer } from 'mobx-react'
 import clsx from 'clsx'
@@ -16,18 +16,27 @@ const TextInput = observer(
     className,
     ...rest
   }: TextInputProps<T>) => {
+    // Local state for managing input value
+    const [inputValue, setInputValue] = useState(formStore.fields[name] || '')
+
+    // Update local state when the formStore changes
+    useEffect(() => {
+      setInputValue(formStore.fields[name] || '')
+    }, [formStore.fields[name]])
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      formStore.setField(name, e.target.value as unknown as T[keyof T])
+      const newValue = e.target.value
+      setInputValue(newValue) // Update local state
+      formStore.setField(name, newValue as unknown as T[keyof T]) // Update form store
     }
 
     const inputClassName = clsx('w-full border p-2 text-black', className)
-    const fieldValue = formStore.fields[name] || '' // Fetching the current value from the form store
 
     return (
       <div className={'flex flex-col'}>
         <input
           name={String(name)}
-          value={fieldValue} // Using fieldValue as the input's value
+          value={inputValue}
           className={inputClassName}
           onChange={handleInputChange}
           {...rest}
