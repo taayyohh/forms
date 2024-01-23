@@ -37,7 +37,7 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   }
 
   setField<K extends keyof T>(field: K, value: T[K]): void {
-    this.fields = { ...this.fields, [field]: value }
+    this.fields[field] = value
     this.errors[field] = ''
   }
 

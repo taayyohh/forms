@@ -46,7 +46,7 @@ const ImageUpload = observer(
       loop: false,
       mode: 'free-snap',
       slides: {
-        perView: 1,
+        perView: 1.5,
         spacing: 10,
       },
       created(s) {
