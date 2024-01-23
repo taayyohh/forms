@@ -93,7 +93,7 @@ const MultiItem = observer(
             <button
               type="button"
               onClick={() => handleRemoveItem(index)}
-              className="border px-1 py-5 rounded text-xs"
+              className="border p-2 rounded text-xs"
             >
               Remove
             </button>
