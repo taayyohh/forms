@@ -102,6 +102,12 @@ const Form = <T extends FormFields>({
       {fieldsConfig.map((fieldConfig) => (
         <div key={fieldConfig.name}>{renderField(fieldConfig)}</div>
       ))}
+      <button
+        type="submit"
+        className="inline-flex self-end rounded p-3 mt-8 border hover:bg-[#111] text-xs text-white uppercase font-bold focus:outline-none"
+      >
+        Submit
+      </button>
     </form>
   )
 }
