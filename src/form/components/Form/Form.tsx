@@ -12,6 +12,7 @@ import { ArrayObjectField } from '../MultiItem/MultiItem'
 import clsx from 'clsx'
 import { useFormStore } from '../../../hooks'
 import { FormFieldType } from '../../types'
+import Select from '../Select/Select'
 
 export interface FieldConfig {
   name: string
@@ -77,6 +78,14 @@ const Form = <T extends FormFields>({
       case FormFieldType.MultiSelect:
         return !!fieldConfig.loadOptions ? (
           <MultiSelect
+            name={fieldConfig.name}
+            formStore={formStore}
+            loadOptions={fieldConfig.loadOptions}
+          />
+        ) : null
+      case FormFieldType.Select:
+        return !!fieldConfig.loadOptions ? (
+          <Select
             name={fieldConfig.name}
             formStore={formStore}
             loadOptions={fieldConfig.loadOptions}

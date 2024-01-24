@@ -1,8 +1,9 @@
 export enum FormFieldType {
-  Text = "text",
-  Number = "number",
-  TextArea = "textarea",
-  MultiSelect = "multiselect",
-  MultiItem = "multiitem",
-  ImageUpload = "imageupload",
+  ImageUpload = 'imageupload',
+  MultiSelect = 'multiselect',
+  MultiItem = 'multiitem',
+  Number = 'number',
+  Select = 'select',
+  Text = 'text',
+  TextArea = 'textarea',
 }
