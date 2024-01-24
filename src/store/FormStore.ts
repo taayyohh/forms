@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from 'mobx'
+import { action, makeAutoObservable, runInAction } from 'mobx'
 import { ZodSchema, ZodError } from 'zod'
 
 export interface FormFields {
@@ -25,12 +25,7 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   initialFields: T
 
   constructor(initialFields: T, validationSchema: U) {
-    makeAutoObservable(this, {
-      setField: action,
-      validate: action,
-      submit: action,
-      resetForm: action,
-    })
+    makeAutoObservable(this)
     this.fields = initialFields
     this.initialFields = initialFields
     this.validationSchema = validationSchema
@@ -44,18 +39,25 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
   async validate(): Promise<boolean> {
     try {
       await this.validationSchema.parseAsync(this.fields)
-      this.errors = {} // Reset all errors
+      runInAction(() => {
+        this.errors = {} // Reset all errors
+      })
       return true
     } catch (error) {
-      let zodError = error as ZodError
-
-      zodError.errors.forEach((err) => {
-        const path = err.path[0]
-        if (typeof path === 'string') {
-          this.errors[path as keyof T] = err.message
-        }
-      })
-
+      if (error instanceof ZodError) {
+        runInAction(() => {
+          let e = error as ZodError
+          e.errors.forEach((err) => {
+            const path = err.path[0]
+            if (typeof path === 'string') {
+              this.errors[path as keyof T] = err.message
+            }
+          })
+        })
+      } else {
+        // Handle or log the unexpected error
+        console.error('An unexpected error occurred:', error)
+      }
       return false
     }
   }
@@ -71,7 +73,13 @@ class FormStore<T extends FormFields, U extends ZodSchema<T>> {
       // Reset form or handle success state as needed
     } catch (error) {
       if (error instanceof Error) {
-        this.errors._submit = error.message
+        let e: Error = error
+        runInAction(() => {
+          this.errors._submit = e.message
+        })
+      } else {
+        // Handle or log the unexpected error
+        console.error('An unexpected error occurred:', error)
       }
     }
   }

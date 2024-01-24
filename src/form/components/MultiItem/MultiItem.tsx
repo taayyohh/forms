@@ -17,11 +17,9 @@ interface MultiItemProps<T extends FormFields> {
 
 const MultiItem = observer(
   <T extends FormFields>({ name, formStore, fields }: MultiItemProps<T>) => {
-    // Initialize from formStore and keep updated
     const [items, setItems] = useState<any[]>((formStore.fields[name] as any[]) || [])
 
     useEffect(() => {
-      // Update local state when formStore changes
       setItems((formStore.fields[name] as any[]) || [])
     }, [formStore.fields, name])
 
@@ -60,7 +58,7 @@ const MultiItem = observer(
               <div key={field.name} className={'text-black w-full gap-2'}>
                 {field.type === 'select' ? (
                   <select
-                    value={item[field.name]}
+                    value={item[field.name] || ''}
                     onChange={(e) =>
                       handleItemChange(index, field.name, e.target.value)
                     }
@@ -76,7 +74,7 @@ const MultiItem = observer(
                   <input
                     className="w-full p-2 h-10"
                     type={field.type}
-                    value={item[field.name]}
+                    value={item[field.name] || (field.type === 'number' ? 0 : '')}
                     onChange={(e) =>
                       handleItemChange(
                         index,
