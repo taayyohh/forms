@@ -23,6 +23,7 @@ export interface FieldConfig {
   defaultValue?: any
   fields?: ArrayObjectField[] // For nested fields like in MultiItem
   className?: string
+  disabled?: boolean
 }
 
 interface FormProps<T extends FormFields> {
@@ -55,6 +56,7 @@ const Form = <T extends FormFields>({
             formStore={formStore}
             placeholder={fieldConfig.placeholder}
             className={fieldConfig.className}
+            disabled={fieldConfig.disabled}
           />
         )
       case FormFieldType.Number:
